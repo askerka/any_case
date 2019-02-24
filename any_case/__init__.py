@@ -1,36 +1,36 @@
 import re
 from copy import deepcopy
 
-from typing import List, TypeVar
+from typing import TypeVar
 
-__first_snake = re.compile(r'([^_])([A-Z][a-z]+)')
-__second_snake = re.compile(r'([a-z])([A-Z])')
-__sub_snake = r'\1_\2'
+__snake_first = re.compile(r'([^_])([A-Z][a-z]+)')
+__snake_second = re.compile(r'([a-z])([A-Z])')
+__snake_sub = r'\1_\2'
 
 
 def to_snake_case(word: str) -> str:
-    word = __first_snake.sub(__sub_snake, word)
-    word = __second_snake.sub(__sub_snake, word)
+    word = __snake_first.sub(__snake_sub, word)
+    word = __snake_second.sub(__snake_sub, word)
     return word.lower()
 
 
-__first_camel = re.compile(r'_([\w])([^_]+)')
+__camel_first = re.compile(r'_([\w])([^_]+)')
 
 
-def __sub_first_camel(match):
+def __camel_first_sub(match):
     return match.group(1).upper() + match.group(2).lower()
 
 
-__second_camel = re.compile(r'([A-Z]+)([A-Z][a-z])')
+__camel_second = re.compile(r'([A-Z]+)([A-Z][a-z])')
 
 
-def __sub_second_camel(match):
+def __camel_second_sub(match):
     return match.group(1).lower() + match.group(2)
 
 
 def to_camel_case(word: str) -> str:
-    word = __first_camel.sub(__sub_first_camel, word)
-    word = __second_camel.sub(__sub_second_camel, word)
+    word = __camel_first.sub(__camel_first_sub, word)
+    word = __camel_second.sub(__camel_second_sub, word)
     return word[0].lower() + word[1:]
 
 
