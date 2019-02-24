@@ -12,7 +12,6 @@ from any_case import to_snake_case, to_camel_case, parse_keys
     ('snake_case', 'snake_case'),
     ('Camel_Case', 'camel_case'),
     ('CONST_CASE', 'const_case'),
-
 ])
 def test__convert_to_snake(source, expected):
     assert to_snake_case(source) == expected
