@@ -1,6 +1,6 @@
 import pytest
 
-from any_case import to_snake_case, to_camel_case, parse_keys
+from any_case import to_snake_case, to_camel_case, converts_keys
 
 
 @pytest.mark.parametrize(['source', 'expected'], [
@@ -34,11 +34,11 @@ def test__convert_to_camel(source, expected):
 @pytest.mark.parametrize('values', [
     [1, 2, 3], 1, 1.0, 'string', (1, 2, 3), {1, 2, 3}, [1, [2], 3]
 ])
-def test__parse_keys__simple_types_as_values(values):
-    assert parse_keys({'key': values}) == {'key': values}
+def test__converts_keys__simple_types_as_values(values):
+    assert converts_keys({'key': values}) == {'key': values}
 
 
-def test__parse_keys__nested_data():
+def test__converts_keys__nested_data():
     data = {
         'key': {
             'subKey': [
@@ -51,6 +51,6 @@ def test__parse_keys__nested_data():
             ]
         }
     }
-    converted = parse_keys(data, types='snake')
+    converted = converts_keys(data, case='snake')
     deep_value = converted['key']['sub_key'][0]['sub_sub_key']['deep_key']
     assert deep_value == 'camelValue'
