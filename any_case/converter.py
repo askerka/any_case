@@ -43,7 +43,7 @@ def converts_keys(data: T, *, case='snake', inplace=False) -> T:
     elif case == 'snake':
         formatter = to_snake_case
     else:
-        raise ValueError('Invalid parse type, use `snake` or `camel`')
+        raise ValueError('Invalid case type, use `snake` or `camel`')
 
     if not inplace:
         data = deepcopy(data)

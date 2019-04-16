@@ -1,8 +1,5 @@
 from typing import List, Callable, Any, Optional
 
-from django.http import HttpRequest
-
-
 Parser = Callable[[Any], Optional[str]]
 
 
@@ -10,7 +7,7 @@ class CaseFormatParser:
     def __init__(self, parsers: List[Parser]) -> None:
         self.parsers = parsers
 
-    def parse(self, request: HttpRequest) -> str:
+    def parse(self, request: Any, raise_exc: bool = False) -> Optional[str]:
         case = None
 
         for parser in self.parsers:
@@ -21,6 +18,9 @@ class CaseFormatParser:
 
         # TODO Replace case variants to Enum
         if case is None or case not in {'snake', 'camel'}:
-            raise ValueError('Did not found known case format')
+            if raise_exc:
+                raise ValueError('Did not found known case format')
+            else:
+                case = None
 
         return case

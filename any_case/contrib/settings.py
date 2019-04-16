@@ -1,11 +1,13 @@
 from typing import Any
 
 import django.conf
+import importlib
 
 DEFAULTS = {
     'HEADER_KEY': None,
-    'QUERY_KEY': None,
-    'BODY_KEY': None,
+    'QUERY_KEY': 'case',
+    'BODY_KEY': 'case',
+    'JSON_MODULE': 'json'
 }
 
 __all__ = ['django_setting']
@@ -19,6 +21,11 @@ class AnyCaseSettings:
     def __getattr__(self, attr: str) -> Any:
         if attr not in self._defaults:
             raise AttributeError(f'Unknown setting: {attr!r}')
+
+        if attr == 'JSON_MODULE':
+            value = importlib.import_module(self._settings[attr])
+            setattr(self, attr, value)
+            return value
 
         return self._settings[attr]
 
