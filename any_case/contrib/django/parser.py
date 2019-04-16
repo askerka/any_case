@@ -1,9 +1,9 @@
-import json
 from typing import Optional
 
 from django.http import HttpRequest
 
 from .settings import django_setting
+from .utils import json_loads
 from ..parser import CaseFormatParser
 
 
@@ -24,10 +24,7 @@ def parse_body(request: HttpRequest) -> Optional[str]:
             and request.content_type == 'application/json'
     ):
         try:
-            body = request.body
-            if isinstance(request.body, str):
-                body = json.loads(request.body)
-            return body.get(django_setting.BODY_KEY)
+            return json_loads(request).get(django_setting.BODY_KEY)
         except ValueError:
             pass
 
