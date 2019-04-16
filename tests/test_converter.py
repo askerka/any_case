@@ -19,7 +19,7 @@ def test__convert_to_snake(source, expected):
 
 @pytest.mark.parametrize(['source', 'expected'], [
     ('snake_case', 'snakeCase'),
-    ('Camel_Case', 'camelCase'),
+    ('Mixed_Case', 'mixedCase'),
     ('CONST_CASE', 'constCase'),
     ('long_snake_case', 'longSnakeCase'),
 

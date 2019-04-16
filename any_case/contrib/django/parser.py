@@ -3,8 +3,8 @@ from typing import Optional
 
 from django.http import HttpRequest
 
+from .settings import django_setting
 from ..parser import CaseFormatParser
-from ..settings import django_setting
 
 
 def parse_header(request: HttpRequest) -> Optional[str]:
@@ -24,7 +24,10 @@ def parse_body(request: HttpRequest) -> Optional[str]:
             and request.content_type == 'application/json'
     ):
         try:
-            return json.loads(request.body).get(django_setting.BODY_KEY)
+            body = request.body
+            if isinstance(request.body, str):
+                body = json.loads(request.body)
+            return body.get(django_setting.BODY_KEY)
         except ValueError:
             pass
 
