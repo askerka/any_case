@@ -16,7 +16,7 @@ class CaseFormatParser:
                 case = case.lower()
                 break
 
-        # TODO Replace case variants to Enum
+        # TODO Replace set to Enum if the number of cases will be more than two
         if case is None or case not in {'snake', 'camel'}:
             if raise_exc:
                 raise ValueError('Did not found known case format')

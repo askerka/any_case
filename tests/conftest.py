@@ -1,3 +1,5 @@
+from importlib import reload
+
 import pytest
 from django.conf import settings
 
@@ -45,3 +47,15 @@ def pytest_configure():
         ],
         DEBUG=True,
     )
+
+
+@pytest.fixture
+def reload_settings():
+    import any_case.contrib.django.parser as any_case_parser
+    import any_case.contrib.django.settings as any_case_settings
+
+    def wrapper():
+        reload(any_case_settings)
+        reload(any_case_parser)
+
+    return wrapper

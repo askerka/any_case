@@ -33,7 +33,7 @@ class KeysConverterMiddleware(MiddlewareMixin):
     ) -> HttpResponse:
         if is_json_content(response):
             try:
-                case = case_format_parser.parse(request)
+                case = case_format_parser.parse(request, raise_exc=True)
                 json_content = json.loads(response.content)
                 converted = converts_keys(json_content, case=case, inplace=True)
                 response.content = json.dumps(converted)
