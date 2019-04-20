@@ -26,18 +26,19 @@ class KeysConverterMiddleware(MiddlewareMixin):
 
             return request
 
-    @staticmethod
-    def process_response(
-            request: HttpRequest,
-            response: HttpResponse,
-    ) -> HttpResponse:
-        if is_json_content(response):
-            try:
-                case = case_format_parser.parse(request, raise_exc=True)
-                json_content = json.loads(response.content)
-                converted = converts_keys(json_content, case=case, inplace=True)
-                response.content = json.dumps(converted)
-            except ValueError:
-                pass
+    if django_setting.has_convert_key:
+        @staticmethod
+        def process_response(
+                request: HttpRequest,
+                response: HttpResponse,
+        ) -> HttpResponse:
+            if is_json_content(response):
+                try:
+                    case = case_format_parser.parse(request, raise_exc=True)
+                    json_content = json.loads(response.content)
+                    converted = converts_keys(json_content, case=case, inplace=True)
+                    response.content = json.dumps(converted)
+                except ValueError:
+                    pass
 
-        return response
+            return response

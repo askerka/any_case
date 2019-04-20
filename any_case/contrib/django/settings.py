@@ -34,6 +34,10 @@ class AnyCaseSettings:
         setattr(self, attr, value)
         return value
 
+    @property
+    def has_convert_key(self) -> bool:
+        return any([self.HEADER_KEY, self.QUERY_KEY, self.BODY_KEY])
+
 
 django_setting = SimpleLazyObject(
     lambda: AnyCaseSettings(

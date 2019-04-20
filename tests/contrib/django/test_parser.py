@@ -53,7 +53,7 @@ def test_parse_body(settings, reload_settings):
     assert 'snake' == any_case_parser.parse_body(request)
 
 
-def test__parser__found_key_in_body(settings, reload_settings):
+def test__case_format_parser__found_key_in_body(settings, reload_settings):
     settings.ANY_CASE = {
         'HEADER_KEY': 'Accept-Json-Case',
         'QUERY_KEY': 'case',
