@@ -3,26 +3,23 @@ from typing import Optional
 from django.http import HttpRequest
 
 from .settings import django_setting
-from .utils import json_loads
+from .utils import json_loads, is_json_possible
 from ..parser import CaseFormatParser
 
 
 def parse_header(request: HttpRequest) -> Optional[str]:
-    return request.headers.get(django_setting.HTTP_HEADER_KEY)
+    return request.headers.get(django_setting.HEADER_KEY)
 
 
 def parse_query(request: HttpRequest) -> Optional[str]:
     return (
-            request.GET.get(django_setting.QUERY_KEY)
-            or request.POST.get(django_setting.QUERY_KEY)
+            request.GET.get(django_setting.QUERY_KEY) or
+            request.POST.get(django_setting.QUERY_KEY)
     )
 
 
 def parse_body(request: HttpRequest) -> Optional[str]:
-    if (
-            request.method not in {'GET', 'HEAD'}
-            and request.content_type == 'application/json'
-    ):
+    if is_json_possible(request):
         try:
             return json_loads(request).get(django_setting.BODY_KEY)
         except ValueError:
