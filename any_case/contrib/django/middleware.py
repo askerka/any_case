@@ -3,14 +3,14 @@ from django.utils.deprecation import MiddlewareMixin
 
 from any_case import converts_keys
 from .parser import case_format_parser
-from .settings import django_setting
+from .settings import django_settings
 from .utils import json, json_loads, is_json_possible, is_json_content
 
 __all__ = ['KeysConverterMiddleware']
 
 
 class KeysConverterMiddleware(MiddlewareMixin):
-    if django_setting.CONVERT_INPUT_JSON:
+    if django_settings.CONVERT_INPUT_JSON:
 
         @staticmethod
         def process_request(request: HttpRequest) -> HttpRequest:
@@ -26,7 +26,7 @@ class KeysConverterMiddleware(MiddlewareMixin):
 
             return request
 
-    if django_setting.has_convert_key:
+    if django_settings.has_convert_key:
         @staticmethod
         def process_response(
                 request: HttpRequest,

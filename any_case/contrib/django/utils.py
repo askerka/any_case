@@ -3,9 +3,9 @@ from typing import Union
 from django.http import HttpRequest, HttpResponse
 from django.utils.functional import SimpleLazyObject
 
-from .settings import django_setting
+from .settings import django_settings
 
-json = SimpleLazyObject(lambda: django_setting.JSON_MODULE)
+json = SimpleLazyObject(lambda: django_settings.JSON_MODULE)
 
 
 def json_loads(request: HttpRequest) -> Union[dict, list]:

@@ -53,9 +53,11 @@ def pytest_configure():
 def reload_settings():
     import any_case.contrib.django.parser as any_case_parser
     import any_case.contrib.django.settings as any_case_settings
+    import any_case.contrib.django.utils as any_case_utils
 
     def wrapper():
         reload(any_case_settings)
         reload(any_case_parser)
+        reload(any_case_utils)
 
     return wrapper

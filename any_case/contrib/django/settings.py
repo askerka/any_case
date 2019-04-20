@@ -14,7 +14,7 @@ DEFAULTS = {
 
 IMPORT_MODULES = ['JSON_MODULE']
 
-__all__ = ['django_setting']
+__all__ = ['django_settings']
 
 
 class AnyCaseSettings:
@@ -39,7 +39,7 @@ class AnyCaseSettings:
         return any([self.HEADER_KEY, self.QUERY_KEY, self.BODY_KEY])
 
 
-django_setting = SimpleLazyObject(
+django_settings = SimpleLazyObject(
     lambda: AnyCaseSettings(
         settings=getattr(django.conf.settings, 'ANY_CASE', {}),
         defaults=DEFAULTS,
