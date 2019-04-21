@@ -1,4 +1,5 @@
 from typing import Any, Union
+from io import BytesIO
 
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
@@ -12,7 +13,7 @@ class AnyCaseJSONParser(JSONParser):
     if django_settings.CONVERT_INPUT_JSON:
         def parse(
                 self,
-                stream,
+                stream: BytesIO,
                 media_type: str = None,
                 parser_context: dict = None,
         ) -> Any:

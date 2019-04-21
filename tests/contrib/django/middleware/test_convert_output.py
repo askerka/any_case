@@ -36,6 +36,7 @@ def test_content_type_not_json(
 
 def test_content_not_json(middleware_factory, snake_request, json_response):
     json_response.content = 'just_text'
+
     middleware_factory().process_response(snake_request, json_response)
 
     assert b'just_text' in json_response.content
@@ -45,6 +46,7 @@ def test_request_has_no_content(
         middleware_factory, snake_request, json_response,
 ):
     json_response.content = ''
+
     middleware_factory().process_response(snake_request, json_response)
 
     assert not json_response.content
