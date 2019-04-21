@@ -13,7 +13,7 @@ from any_case import to_snake_case, to_camel_case, converts_keys
     ('Camel_Case', 'camel_case'),
     ('CONST_CASE', 'const_case'),
 ])
-def test__convert_to_snake(source, expected):
+def test_convert_to_snake(source, expected):
     assert to_snake_case(source) == expected
 
 
@@ -27,18 +27,18 @@ def test__convert_to_snake(source, expected):
     ('PascalCase', 'pascalCase'),
     ('HTTPResponse', 'httpResponse'),
 ])
-def test__convert_to_camel(source, expected):
+def test_convert_to_camel(source, expected):
     assert to_camel_case(source) == expected
 
 
 @pytest.mark.parametrize('values', [
     [1, 2, 3], 1, 1.0, 'string', (1, 2, 3), {1, 2, 3}, [1, [2], 3]
 ])
-def test__converts_keys__simple_types_as_values(values):
+def test_simple_types_not_converted(values):
     assert converts_keys({'key': values}) == {'key': values}
 
 
-def test__converts_keys__nested_data():
+def test_convert_nested_data():
     data = {
         'key': {
             'subKey': [
