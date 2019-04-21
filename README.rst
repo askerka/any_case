@@ -127,10 +127,14 @@ Settings
 
 Settings are specified in django ``settings.py``.
 
-``any_case`` can be used for converting input json data to snake_case and for converting
-output json to snake_case or camelCase. Or only one of the above independently.
+``any_case`` can be used for converting:
 
-You can specify the format in the header, in the query parameters, or in the json body.
+- input json data to snake_case
+- output json to snake_case or camelCase
+
+Or only one of the above independently.
+
+You can specify the case format in the header, in the query parameters, or in the json body.
 The preferred way is the header, because specifying in the query or in the body
 is not always possible. Specifying case format in the body also forces to parse json data that
 may not be needed at all.
