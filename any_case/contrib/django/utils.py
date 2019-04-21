@@ -5,7 +5,7 @@ from django.utils.functional import SimpleLazyObject
 
 from .settings import django_settings
 
-json = SimpleLazyObject(lambda: django_settings.JSON_MODULE)
+json = django_settings.JSON_MODULE
 
 
 def json_loads(request: HttpRequest) -> Union[dict, list]:

@@ -3,41 +3,38 @@ import json
 import pytest
 from django.test import RequestFactory
 
-from any_case.contrib.django import KeysConverterMiddleware
-
 
 @pytest.fixture
-def any_case_settings(settings, reload_settings):
+def convert_input_json(settings):
     settings.ANY_CASE = {'CONVERT_INPUT_JSON': True}
-    reload_settings()
 
 
-pytestmark = pytest.mark.usefixtures('any_case_settings')
+pytestmark = pytest.mark.usefixtures('convert_input_json')
 
 
-def test_convert_valid_post_json():
+def test_convert_valid_post_json(middleware_factory):
     request = RequestFactory().post(
         '/', json.dumps({'camelCase': 'key'}), 'application/json',
     )
 
-    KeysConverterMiddleware(lambda: None).process_request(request)
+    middleware_factory().process_request(request)
 
     assert 'camel_case' in request.json
 
 
-def test_just_text_with_json_content_type():
+def test_just_text_with_json_content_type(middleware_factory):
     request = RequestFactory().post(
         '/', 'just_text', 'application/json',
     )
-    KeysConverterMiddleware(lambda: None).process_request(request)
+    middleware_factory().process_request(request)
 
     assert not hasattr(request, 'json')
 
 
-def test__get_request_with_json_content_type():
+def test__get_request_with_json_content_type(middleware_factory):
     request = RequestFactory().get(
         '/', {'camelCase': 'key'}, CONTENT_TYPE='application/json',
     )
-    KeysConverterMiddleware(lambda: None).process_request(request)
+    middleware_factory().process_request(request)
 
     assert not hasattr(request, 'json')

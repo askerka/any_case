@@ -14,7 +14,7 @@ DEFAULTS = {
 
 IMPORT_MODULES = ['JSON_MODULE']
 
-__all__ = ['django_settings']
+__all__ = ['AnyCaseSettings', 'any_case_settings', 'django_settings']
 
 
 class AnyCaseSettings:
@@ -27,7 +27,9 @@ class AnyCaseSettings:
             raise AttributeError(f'Unknown setting: {attr!r}')
 
         if attr in IMPORT_MODULES:
-            value = importlib.import_module(self._settings[attr])
+            value = SimpleLazyObject(
+                lambda: importlib.import_module(self._settings[attr])
+            )
         else:
             value = self._settings[attr]
 
@@ -39,9 +41,13 @@ class AnyCaseSettings:
         return any([self.HEADER_KEY, self.QUERY_KEY, self.BODY_KEY])
 
 
-django_settings = SimpleLazyObject(
-    lambda: AnyCaseSettings(
-        settings=getattr(django.conf.settings, 'ANY_CASE', {}),
+def any_case_settings(settings: Any) -> AnyCaseSettings:
+    return AnyCaseSettings(
+        settings=getattr(settings, 'ANY_CASE', {}),
         defaults=DEFAULTS,
     )
+
+
+django_settings = SimpleLazyObject(
+    lambda: any_case_settings(django.conf.settings)
 )
