@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "any_case"
 version = "0.1.0"
-description = ""
+description = "Snake/Camle case converter with django and rest_framework integration"
 authors = ["asduj <asduj@ya.ru>"]
 license = "MIT"
 
