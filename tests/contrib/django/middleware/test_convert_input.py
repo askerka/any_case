@@ -31,7 +31,7 @@ def test_just_text_with_json_content_type(middleware_factory):
     assert not hasattr(request, 'json')
 
 
-def test__get_request_with_json_content_type(middleware_factory):
+def test_get_request_with_json_content_type(middleware_factory):
     request = RequestFactory().get(
         '/', {'camelCase': 'key'}, CONTENT_TYPE='application/json',
     )
