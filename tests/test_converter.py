@@ -51,6 +51,6 @@ def test__converts_keys__nested_data():
             ]
         }
     }
-    converted = converts_keys(data, case='snake')
+    converted = converts_keys(data, case='snake', inplace=True)
     deep_value = converted['key']['sub_key'][0]['sub_sub_key']['deep_key']
     assert deep_value == 'camelValue'

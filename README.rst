@@ -53,9 +53,17 @@ For converting dict or list use ``converts_keys`` function::
     >>> data = {'snake_case': 'camelCase'}
     >>> converts_keys(data, case='camel')
     {'snakeCase': 'camelCase'}
-    >>>
 
-For converting ``any_case`` uses compiled regex and stack for objects traversal.
+For converting ``any_case`` uses compiled regex and stack for objects traversal instead of recursion.
+
+To convert existing data without producing new one, use ``inplace`` param::
+
+    >>> data = {'snake_case': 'camelCase'}
+    >>> converts_keys(data, case='camel', inplace=True)
+    {'snakeCase': 'camelCase'}
+    >>> data
+    {'snakeCase': 'camelCase'}
+
 
 To convert text, use ``to_snake_case`` or ``to_camel_case``::
 

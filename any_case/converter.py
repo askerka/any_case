@@ -43,7 +43,7 @@ def converts_keys(data: T, *, case='snake', inplace=False) -> T:
     elif case == 'snake':
         formatter = to_snake_case
     else:
-        raise ValueError('Invalid case type, use `snake` or `camel`')
+        raise ValueError('Invalid case format, use `snake` or `camel`')
 
     if not inplace:
         data = deepcopy(data)
@@ -57,7 +57,7 @@ def converts_keys(data: T, *, case='snake', inplace=False) -> T:
             queue.extend(element)
 
         elif isinstance(element, dict):
-            for key in list(element.keys())[:]:
+            for key in tuple(element.keys()):
                 value = element[formatter(key)] = element.pop(key)
 
                 if isinstance(value, list):
