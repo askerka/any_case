@@ -3,19 +3,19 @@
 any_case
 ========
 
-When developing a web application, you often have to choose the format (snake_case/camelCase)
-will be used for the input and the output json data. If the backend is written in python,
+When developing a web application, you often have to choose the case format (snake_case/camelCase)
+will be used for the input and the output json data. If the backend is written in Python,
 the easiest option is to choose snake_case. On the one hand, this is good, because we have
 an obvious consistency, but on the other hand, the main consumers of the API (mobile and browser)
 prefer to use camelCase.
 
-If we care about our consumers, we will change the case to camelCase. And it's good if we think
+If we care about our consumers, we will change the case format to camelCase. And it's good if we think
 about it in advance, before publishing API. But if this happens in an existing application,
 it becomes much more difficult to do so because there are consumers using the existing API.
 We have two options here:
 
-  - introduce a new version of the api
-  - send data in two cases at once
+- introduce a new version of the api
+- send data in two cases at once
 
 The second option increases the size of the data, and the first option forces us to support two
 versions of the API without serious need. These options complicate the support and development of API.
@@ -25,7 +25,7 @@ and using camelCase for them is not an option at all.
 
 As you can see, the use of one notation does not improve, but may worsen the situation.
 
-But why do we have to choose for the customer which version of the notation they use?
+But why do we have to choose for the customer which case format they use?
 Why customers do not send and not receive data in the format, which would be more convenient to them?
 
 
@@ -44,7 +44,7 @@ Installation
 
 Usage
 =====
-For converting dict or list use `converts_keys` function::
+For converting dict or list use ``converts_keys`` function::
 
     >>> from any_case import converts_keys
     >>> data = {'camelCaseKey': 'value'}
@@ -54,9 +54,10 @@ For converting dict or list use `converts_keys` function::
     >>> converts_keys(data, case='camel')
     {'snakeCase': 'camelCase'}
     >>>
-For converting `any_case` uses compiled regex and stack for objects traversal.
 
-To convert text, use `to_snake_case` or `to_camel_case`::
+For converting ``any_case`` uses compiled regex and stack for objects traversal.
+
+To convert text, use ``to_snake_case`` or ``to_camel_case``::
 
     >>> from any_case import to_snake_case, to_camel_case
     >>> to_snake_case('snakeCase')
@@ -64,13 +65,15 @@ To convert text, use `to_snake_case` or `to_camel_case`::
     >>> to_camel_case('snake_case')
     'snakeCase'
 
+More examples see at tests folder.
+
 Integrations
 ============
 
 Django
 ------
 
-For integration with the Django framework, you need to add any_case middleware::
+For integration with the Django framework, you need to add ``any_case`` middleware::
 
     MIDDLEWARE = [
         'django.contrib.sessions.middleware.SessionMiddleware',
@@ -79,7 +82,7 @@ For integration with the Django framework, you need to add any_case middleware::
     ]
 
 
-When the input data is converted, it is saved in the `json` field of request object.
+When the input data is converted, it is saved in the ``json`` field of request object.
 That is, you can access to the converted data in the view as follows::
 
     def view(request):
@@ -105,7 +108,7 @@ For integration with rest_framework, replace default json parser and renderer::
 
 Settings
 --------
-`any_case` has the next default settings::
+``any_case`` has the next default settings::
 
     ANY_CASE = {
         'HEADER_KEY': 'Accept-Json-Case',
@@ -114,7 +117,9 @@ Settings
         'CONVERT_INPUT_JSON': True
     }
 
-`any_case` can be used for converting input json data to snake_case and for converting
+Settings are specified in django ``settings.py``.
+
+``any_case`` can be used for converting input json data to snake_case and for converting
 output json to snake_case or camelCase. Or only one of the above independently.
 
 You can specify the format in the header, in the query parameters, or in the json body.
@@ -125,7 +130,7 @@ may not be needed at all.
 
 Disable converting output data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- ::
+::
 
     ANY_CASE = {
         'HEADER_KEY': None,
@@ -136,7 +141,7 @@ Disable converting output data
 Disable converting input data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- ::
+::
 
     ANY_CASE = {
         'CONVERT_INPUT_JSON': False
