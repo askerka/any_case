@@ -1,3 +1,5 @@
+from typing import KeysView
+
 import pytest
 
 from any_case import to_snake_case, to_camel_case, converts_keys
@@ -53,4 +55,36 @@ def test_convert_nested_data():
     }
     converted = converts_keys(data, case='snake', inplace=True)
     deep_value = converted['key']['sub_key'][0]['sub_sub_key']['deep_key']
+
     assert deep_value == 'camelValue'
+
+
+def test_convert_dict_values():
+    data = {
+        'key': {
+            '1': {'snake_case': 'value'},
+            '2': {'snake_case': 'value'},
+            '3': {'snake_case': 'value'},
+        }.values(),
+        'simple': {'1': 1, '2': 2, '3': 3}.keys()
+    }
+    result = converts_keys(data, case='camel')
+
+    assert result['key'] == [{'snakeCase': 'value'}] * 3
+    assert result['simple'] == list(data['simple'])
+    assert isinstance(data['simple'], KeysView)
+
+
+def test_convert_dict_values_inplace():
+    data = {'key': {'inner': {'snake_case': 'value'}}.values()}
+    converts_keys(data, case='camel', inplace=True)
+
+    assert data['key'] == [{'snakeCase': 'value'}]
+
+
+def test_convert_wrong_data_container():
+    data = {'snake_case': 'value'}.values()
+
+    with pytest.raises(TypeError):
+        # noinspection PyTypeChecker
+        converts_keys(data, case='snake')
