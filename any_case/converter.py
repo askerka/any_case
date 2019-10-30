@@ -1,7 +1,7 @@
 import copyreg
 import re
 # noinspection PyProtectedMember
-from _collections_abc import dict_values, dict_keys, dict_items
+from _collections_abc import dict_items, dict_keys, dict_values
 from copy import deepcopy
 from typing import Iterator, MappingView, TypeVar
 
@@ -9,16 +9,18 @@ __all__ = ['to_snake_case', 'to_camel_case', 'converts_keys']
 
 __snake_first = re.compile(r'([^_])([A-Z][a-z]+)')
 __snake_second = re.compile(r'([a-z])([A-Z])')
+__snake_third = re.compile(r'([a-zA-Z])(\d)')
 __snake_sub = r'\1_\2'
 
 
 def to_snake_case(word: str) -> str:
     word = __snake_first.sub(__snake_sub, word)
     word = __snake_second.sub(__snake_sub, word)
+    word = __snake_third.sub(__snake_sub, word)
     return word.lower()
 
 
-__camel_first = re.compile(r'_([\w])([^_]+)')
+__camel_first = re.compile(r'_([\w\d])([^_]+)')
 
 
 def __camel_first_sub(match):

@@ -2,7 +2,7 @@ from typing import KeysView
 
 import pytest
 
-from any_case import to_snake_case, to_camel_case, converts_keys
+from any_case import converts_keys, to_camel_case, to_snake_case
 
 
 @pytest.mark.parametrize(['source', 'expected'], [
@@ -14,6 +14,10 @@ from any_case import to_snake_case, to_camel_case, converts_keys
     ('snake_case', 'snake_case'),
     ('Camel_Case', 'camel_case'),
     ('CONST_CASE', 'const_case'),
+
+    ('camelCase123Some', 'camel_case_123_some'),
+    ('123CamelCaseSome', '123_camel_case_some'),
+    ('camelCaseSome123', 'camel_case_some_123'),
 ])
 def test_convert_to_snake(source, expected):
     assert to_snake_case(source) == expected
@@ -28,6 +32,11 @@ def test_convert_to_snake(source, expected):
     ('camelCase', 'camelCase'),
     ('PascalCase', 'pascalCase'),
     ('HTTPResponse', 'httpResponse'),
+
+    ('camel_case_123_some', 'camelCase123Some'),
+    ('camel_case123_some', 'camelCase123Some'),
+    ('camel_case_some_123', 'camelCaseSome123'),
+    ('123_camel_case_some', '123CamelCaseSome'),
 ])
 def test_convert_to_camel(source, expected):
     assert to_camel_case(source) == expected
