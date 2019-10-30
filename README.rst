@@ -1,4 +1,4 @@
-.. highlight:: python
+.. highlight::python
 
 any_case
 ========
