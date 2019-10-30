@@ -5,22 +5,50 @@ from _collections_abc import dict_items, dict_keys, dict_values
 from copy import deepcopy
 from typing import Iterator, MappingView, TypeVar
 
-__all__ = ['to_snake_case', 'to_camel_case', 'converts_keys']
+__all__ = [
+    'to_snake_case',
+    'to_camel_case',
+    'converts_keys',
+    'camel_case_factory',
+    'snake_case_factory',
+]
 
 __snake_first = re.compile(r'([^_])([A-Z][a-z]+)')
 __snake_second = re.compile(r'([a-z])([A-Z])')
-__snake_third = re.compile(r'([a-zA-Z])(\d)')
 __snake_sub = r'\1_\2'
 
+__numbers_first = re.compile(r'([a-zA-Z])(\d)')
+__numbers_second = re.compile(r'(\d)([a-zA-Z])')
+__numbers_sub = r'\1_\2'
 
-def to_snake_case(word: str) -> str:
+
+def to_snake_case(word: str, sep_numbers: bool = False) -> str:
     word = __snake_first.sub(__snake_sub, word)
     word = __snake_second.sub(__snake_sub, word)
-    word = __snake_third.sub(__snake_sub, word)
+    if sep_numbers:
+        word = __numbers_first.sub(__numbers_sub, word)
+        word = __numbers_second.sub(__numbers_sub, word)
     return word.lower()
 
 
-__camel_first = re.compile(r'_([\w\d])([^_]+)')
+def snake_case_factory(sep_numbers: bool = False) -> callable:
+    if sep_numbers:
+        def formatter(word: str) -> str:
+            word = __snake_first.sub(__snake_sub, word)
+            word = __snake_second.sub(__snake_sub, word)
+            word = __numbers_first.sub(__numbers_sub, word)
+            word = __numbers_second.sub(__numbers_sub, word)
+            return word.lower()
+    else:
+        def formatter(word: str) -> str:
+            word = __snake_first.sub(__snake_sub, word)
+            word = __snake_second.sub(__snake_sub, word)
+            return word.lower()
+
+    return formatter
+
+
+__camel_first = re.compile(r'_([\w])([^_]*)')
 
 
 def __camel_first_sub(match):
@@ -34,10 +62,30 @@ def __camel_second_sub(match):
     return match.group(1).lower() + match.group(2)
 
 
-def to_camel_case(word: str) -> str:
+def to_camel_case(word: str, sep_numbers: bool = False) -> str:
     word = __camel_first.sub(__camel_first_sub, word)
     word = __camel_second.sub(__camel_second_sub, word)
+    if sep_numbers:
+        word = __numbers_first.sub(__numbers_sub, word)
+        word = __numbers_second.sub(__numbers_sub, word)
     return word[0].lower() + word[1:]
+
+
+def camel_case_factory(sep_numbers: bool = False) -> callable:
+    if sep_numbers:
+        def formatter(word: str) -> str:
+            word = __camel_first.sub(__camel_first_sub, word)
+            word = __camel_second.sub(__camel_second_sub, word)
+            word = __numbers_first.sub(__numbers_sub, word)
+            word = __numbers_second.sub(__numbers_sub, word)
+            return word[0].lower() + word[1:]
+    else:
+        def formatter(word: str) -> str:
+            word = __camel_first.sub(__camel_first_sub, word)
+            word = __camel_second.sub(__camel_second_sub, word)
+            return word[0].lower() + word[1:]
+
+    return formatter
 
 
 def __pickle_dict_view(view):
@@ -53,11 +101,11 @@ copyreg.dispatch_table.update({
 T = TypeVar('T', dict, list)
 
 
-def converts_keys(data: T, *, case='snake', inplace=False) -> T:
+def converts_keys(data: T, *, case: str = 'snake', inplace: bool = False, **kwargs) -> T:
     if case == 'camel':
-        formatter = to_camel_case
+        formatter = camel_case_factory(**kwargs)
     elif case == 'snake':
-        formatter = to_snake_case
+        formatter = snake_case_factory(**kwargs)
     else:
         raise ValueError('Invalid case format, use `snake` or `camel`')
 

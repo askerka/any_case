@@ -9,7 +9,8 @@ DEFAULTS = {
     'QUERY_KEY': None,
     'BODY_KEY': None,
     'JSON_MODULE': 'json',
-    'CONVERT_INPUT_JSON': True
+    'CONVERT_INPUT_JSON': True,
+    'SEP_NUMBERS': False,
 }
 
 IMPORT_MODULES = ['JSON_MODULE']

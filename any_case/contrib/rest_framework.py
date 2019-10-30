@@ -18,7 +18,10 @@ class AnyCaseJSONParser(JSONParser):
                 parser_context: dict = None,
         ) -> Any:
             data = super().parse(stream, media_type, parser_context)
-            data = converts_keys(data, case='snake', inplace=True)
+            data = converts_keys(
+                data, case='snake', inplace=True,
+                sep_numbers=django_settings.SEP_NUMBERS,
+            )
             return data
 
 
@@ -35,6 +38,9 @@ class AnyCaseJSONRenderer(JSONRenderer):
 
             case = case_format_parser.parse(request)
             if case:
-                data = converts_keys(data, case=case, inplace=True)
+                data = converts_keys(
+                    data, case=case, inplace=True,
+                    sep_numbers=django_settings.SEP_NUMBERS,
+                )
 
             return super().render(data, accepted_media_type, renderer_context)

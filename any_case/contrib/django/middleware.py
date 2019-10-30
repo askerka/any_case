@@ -3,8 +3,8 @@ from django.utils.deprecation import MiddlewareMixin
 
 from any_case import converts_keys
 from .parser import case_format_parser
-from .settings import django_settings, AnyCaseSettings
-from .utils import json, json_loads, is_json_possible, is_json_content
+from .settings import AnyCaseSettings, django_settings
+from .utils import is_json_content, is_json_possible, json, json_loads
 
 __all__ = [
     'InputKeysConverterMixin',
@@ -22,6 +22,7 @@ class InputKeysConverterMixin:
                 json_body = json_loads(request)
                 converted = converts_keys(
                     json_body, case='snake', inplace=True,
+                    sep_numbers=django_settings.SEP_NUMBERS,
                 )
                 request.json = converted
             except ValueError:
@@ -40,7 +41,10 @@ class OutputKeysConverterMixin:
             try:
                 case = case_format_parser.parse(request, raise_exc=True)
                 json_content = json.loads(response.content)
-                converted = converts_keys(json_content, case=case, inplace=True)
+                converted = converts_keys(
+                    json_content, case=case, inplace=True,
+                    sep_numbers=django_settings.SEP_NUMBERS,
+                )
                 response.content = json.dumps(converted)
             except ValueError:
                 pass
