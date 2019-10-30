@@ -64,6 +64,16 @@ To convert existing data without producing new one, use ``inplace`` param::
     >>> data
     {'snakeCase': 'camelCase'}
 
+Some tricky cases could happen when works with keys which contains numbers::
+
+     >>> data = {'camelCase12': 'camelCase'}
+     >>> converts_keys(data, case='snake')
+     {'camel_case12': 'camelCase'}
+
+To adjust this logic use `sep_numbers` params::
+
+    >>> converts_keys(data, case='snake', sep_numbers=True)
+    {'camel_case_12': 'camelCase'}
 
 To convert text, use ``to_snake_case`` or ``to_camel_case``::
 
@@ -122,7 +132,9 @@ Settings
         'HEADER_KEY': 'Accept-Json-Case',
         'QUERY_KEY': None,
         'BODY_KEY': None,
-        'CONVERT_INPUT_JSON': True
+        'CONVERT_INPUT_JSON': True,
+        'SEP_NUMBERS_TO_CAMEL': False,
+        'SEP_NUMBERS_TO_SNAKE': False,
     }
 
 Settings are specified in django ``settings.py``.
@@ -152,9 +164,10 @@ Disable converting output data
 
 Disable converting input data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 ::
 
     ANY_CASE = {
         'CONVERT_INPUT_JSON': False
     }
+
+::

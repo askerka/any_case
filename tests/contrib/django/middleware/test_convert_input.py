@@ -38,3 +38,14 @@ def test_get_request_with_json_content_type(middleware_factory):
     middleware_factory().process_request(request)
 
     assert not hasattr(request, 'json')
+
+
+def test_sep_numbers(settings, middleware_factory):
+    settings.ANY_CASE['SEP_NUMBERS_TO_SNAKE'] = True
+    request = RequestFactory().post(
+        '/', json.dumps({'camelCase12': 'key'}), 'application/json',
+    )
+
+    middleware_factory().process_request(request)
+
+    assert request.json == {'camel_case_12': 'key'}

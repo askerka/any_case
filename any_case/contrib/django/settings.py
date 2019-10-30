@@ -10,7 +10,8 @@ DEFAULTS = {
     'BODY_KEY': None,
     'JSON_MODULE': 'json',
     'CONVERT_INPUT_JSON': True,
-    'SEP_NUMBERS': False,
+    'SEP_NUMBERS_TO_CAMEL': False,
+    'SEP_NUMBERS_TO_SNAKE': False,
 }
 
 IMPORT_MODULES = ['JSON_MODULE']
@@ -40,6 +41,13 @@ class AnyCaseSettings:
     @property
     def has_convert_key(self) -> bool:
         return any([self.HEADER_KEY, self.QUERY_KEY, self.BODY_KEY])
+
+    def sep_numbers(self, case: str) -> bool:
+        if case == 'snake':
+            return self.SEP_NUMBERS_TO_SNAKE
+        elif case == 'camel':
+            return self.SEP_NUMBERS_TO_CAMEL
+        raise ValueError('Invalid case format, use `snake` or `camel`')
 
 
 def any_case_settings(settings: Any) -> AnyCaseSettings:

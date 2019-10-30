@@ -15,14 +15,16 @@ __all__ = [
 
 
 class InputKeysConverterMixin:
-    @staticmethod
-    def process_request(request: HttpRequest) -> HttpRequest:
+    settings: AnyCaseSettings
+
+    @classmethod
+    def process_request(cls, request: HttpRequest) -> HttpRequest:
         if is_json_possible(request):
             try:
                 json_body = json_loads(request)
                 converted = converts_keys(
                     json_body, case='snake', inplace=True,
-                    sep_numbers=django_settings.SEP_NUMBERS,
+                    sep_numbers=cls.settings.SEP_NUMBERS_TO_SNAKE,
                 )
                 request.json = converted
             except ValueError:
@@ -32,8 +34,11 @@ class InputKeysConverterMixin:
 
 
 class OutputKeysConverterMixin:
-    @staticmethod
+    settings: AnyCaseSettings
+
+    @classmethod
     def process_response(
+            cls,
             request: HttpRequest,
             response: HttpResponse,
     ) -> HttpResponse:
@@ -43,7 +48,7 @@ class OutputKeysConverterMixin:
                 json_content = json.loads(response.content)
                 converted = converts_keys(
                     json_content, case=case, inplace=True,
-                    sep_numbers=django_settings.SEP_NUMBERS,
+                    sep_numbers=cls.settings.sep_numbers(case),
                 )
                 response.content = json.dumps(converted)
             except ValueError:
@@ -60,7 +65,7 @@ def any_case_middleware_class(settings: AnyCaseSettings) -> MiddlewareMixin:
     if settings.has_convert_key:
         bases.append(OutputKeysConverterMixin)
 
-    return type('KeysConverterMiddleware', tuple(bases), {})
+    return type('KeysConverterMiddleware', tuple(bases), {'settings': settings})
 
 
 KeysConverterMiddleware = any_case_middleware_class(django_settings)
