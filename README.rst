@@ -169,5 +169,3 @@ Disable converting input data
     ANY_CASE = {
         'CONVERT_INPUT_JSON': False
     }
-
-::
