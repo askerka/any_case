@@ -18,7 +18,7 @@ __snake_second = re.compile(r'([a-z])([A-Z])')
 __snake_sub = r'\1_\2'
 
 __numbers_first = re.compile(r'([a-zA-Z])(\d)')
-__numbers_second = re.compile(r'(\d)([a-zA-Z])')
+__numbers_second = re.compile(r'(\d)([A-Z])')
 __numbers_sub = r'\1_\2'
 
 
@@ -48,26 +48,31 @@ def snake_case_factory(sep_numbers: bool = False) -> callable:
     return formatter
 
 
-__camel_first = re.compile(r'_([\w])([^_]*)')
+__camel_first = re.compile(r'(?<=[_])([a-zA-Z])([^_]*)')
 
 
 def __camel_first_sub(match):
     return match.group(1).upper() + match.group(2).lower()
 
 
-__camel_second = re.compile(r'([A-Z]+)([A-Z][a-z])')
+__camel_second = re.compile(r'([A-Z]+)(_?[A-Z][a-z])')
 
 
 def __camel_second_sub(match):
     return match.group(1).lower() + match.group(2)
 
 
+__camel_third = re.compile(r'([a-zA-Z])_([a-zA-Z])')
+__camel_third_sub = r'\1\2'
+
+
 def to_camel_case(word: str, sep_numbers: bool = False) -> str:
     word = __camel_first.sub(__camel_first_sub, word)
     word = __camel_second.sub(__camel_second_sub, word)
-    if sep_numbers:
-        word = __numbers_first.sub(__numbers_sub, word)
-        word = __numbers_second.sub(__numbers_sub, word)
+    if not sep_numbers:
+        word = word.replace('_', '')
+    else:
+        word = __camel_third.sub(__camel_third_sub, word)
     return word[0].lower() + word[1:]
 
 
@@ -76,13 +81,13 @@ def camel_case_factory(sep_numbers: bool = False) -> callable:
         def formatter(word: str) -> str:
             word = __camel_first.sub(__camel_first_sub, word)
             word = __camel_second.sub(__camel_second_sub, word)
-            word = __numbers_first.sub(__numbers_sub, word)
-            word = __numbers_second.sub(__numbers_sub, word)
+            word = __camel_third.sub(__camel_third_sub, word)
             return word[0].lower() + word[1:]
     else:
         def formatter(word: str) -> str:
             word = __camel_first.sub(__camel_first_sub, word)
             word = __camel_second.sub(__camel_second_sub, word)
+            word = word.replace('_', '')
             return word[0].lower() + word[1:]
 
     return formatter
