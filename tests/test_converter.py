@@ -22,6 +22,8 @@ from any_case.converter import camel_case_factory, snake_case_factory
     ('camel123Case', 'camel123_case'),
     ('camel123case', 'camel123case'),
     ('camelCase123', 'camel_case123'),
+    ('CAMEL123Case', 'camel123_case'),
+    ('CAMEL123case', 'camel123case'),
 ])
 @pytest.mark.parametrize('formatter', [to_snake_case, snake_case_factory()])
 def test_convert_to_snake(source, expected, formatter):
@@ -34,6 +36,8 @@ def test_convert_to_snake(source, expected, formatter):
     ('camel123Case', 'camel_123_case'),
     ('camel123case', 'camel_123case'),
     ('camelCase123', 'camel_case_123'),
+    ('CAMEL123Case', 'camel_123_case'),
+    ('CAMEL123case', 'camel_123case'),
 ])
 @pytest.mark.parametrize('formatter', [
     partial(to_snake_case, sep_numbers=True),

@@ -15,19 +15,15 @@ __all__ = [
 
 __snake_first = re.compile(r'([^_])([A-Z][a-z]+)')
 __snake_second = re.compile(r'([a-z])([A-Z])')
+__snake_third = re.compile(r'([a-zA-Z])(\d)')
 __snake_sub = r'\1_\2'
-
-__numbers_first = re.compile(r'([a-zA-Z])(\d)')
-__numbers_second = re.compile(r'(\d)([A-Z])')
-__numbers_sub = r'\1_\2'
 
 
 def to_snake_case(word: str, sep_numbers: bool = False) -> str:
     word = __snake_first.sub(__snake_sub, word)
     word = __snake_second.sub(__snake_sub, word)
     if sep_numbers:
-        word = __numbers_first.sub(__numbers_sub, word)
-        word = __numbers_second.sub(__numbers_sub, word)
+        word = __snake_third.sub(__snake_sub, word)
     return word.lower()
 
 
@@ -36,8 +32,7 @@ def snake_case_factory(sep_numbers: bool = False) -> callable:
         def formatter(word: str) -> str:
             word = __snake_first.sub(__snake_sub, word)
             word = __snake_second.sub(__snake_sub, word)
-            word = __numbers_first.sub(__numbers_sub, word)
-            word = __numbers_second.sub(__numbers_sub, word)
+            word = __snake_third.sub(__snake_sub, word)
             return word.lower()
     else:
         def formatter(word: str) -> str:
