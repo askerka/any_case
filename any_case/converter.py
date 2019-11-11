@@ -43,7 +43,7 @@ def snake_case_factory(sep_numbers: bool = False) -> callable:
     return formatter
 
 
-__camel_first = re.compile(r'(?<=[_])([a-zA-Z])([^_]*)')
+__camel_first = re.compile(r'(?<=[\w]_)([a-zA-Z])([^_]*)')
 
 
 def __camel_first_sub(match):
@@ -57,17 +57,18 @@ def __camel_second_sub(match):
     return match.group(1).lower() + match.group(2)
 
 
-__camel_third = re.compile(r'([a-zA-Z])_([a-zA-Z])')
-__camel_third_sub = r'\1\2'
+__camel_third = re.compile(r'(?<=\w)_(\w)')
+__camel_third_numbers = re.compile(r'(?<=[^\d])_([^\d])')
+__camel_sub = r'\1'
 
 
 def to_camel_case(word: str, sep_numbers: bool = False) -> str:
     word = __camel_first.sub(__camel_first_sub, word)
     word = __camel_second.sub(__camel_second_sub, word)
     if not sep_numbers:
-        word = word.replace('_', '')
+        word = __camel_third.sub(__camel_sub, word)
     else:
-        word = __camel_third.sub(__camel_third_sub, word)
+        word = __camel_third_numbers.sub(__camel_sub, word)
     return word[0].lower() + word[1:]
 
 
@@ -76,13 +77,13 @@ def camel_case_factory(sep_numbers: bool = False) -> callable:
         def formatter(word: str) -> str:
             word = __camel_first.sub(__camel_first_sub, word)
             word = __camel_second.sub(__camel_second_sub, word)
-            word = __camel_third.sub(__camel_third_sub, word)
+            word = __camel_third_numbers.sub(__camel_sub, word)
             return word[0].lower() + word[1:]
     else:
         def formatter(word: str) -> str:
             word = __camel_first.sub(__camel_first_sub, word)
             word = __camel_second.sub(__camel_second_sub, word)
-            word = word.replace('_', '')
+            word = __camel_third.sub(__camel_sub, word)
             return word[0].lower() + word[1:]
 
     return formatter
