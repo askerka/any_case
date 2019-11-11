@@ -73,6 +73,7 @@ def test_convert_to_snake_with_numbers(source, expected, formatter):
     ('a_b_', 'aB_'),
     ('_a_b', '_aB'),
     ('_case_123', '_case123'),
+    ('a_b1', 'aB1'),
 ])
 @pytest.mark.parametrize('formatter', [to_camel_case, camel_case_factory()])
 def test_convert_to_camel(source, expected, formatter):
@@ -92,6 +93,7 @@ def test_convert_to_camel(source, expected, formatter):
     ('a_b_', 'aB_'),
     ('_a_b', '_aB'),
     ('_case_123', '_case_123'),
+    ('a_b1', 'aB1'),
 ])
 @pytest.mark.parametrize('formatter', [
     partial(to_camel_case, sep_numbers=True),
